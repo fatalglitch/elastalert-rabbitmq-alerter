@@ -1,0 +1,35 @@
+# Rule name, must be unique
+name: Test Alert
+
+type: any
+
+realert:
+  seconds: 0
+
+index: wineventlog-%Y-%m-%d
+timestamp_field: '@timestamp'
+
+filter:
+- query:
+    query_string:
+      query: "computer_name:COMPUTER"
+
+alert_text: '{{"@uuid": "{0}", "@timestamp": "{1}",  "collection": "{2}", "type": "{3}", "beat.name": "{4}", "computer_name": "{5}", "log_name": "{6}", "rule_name": "Windows Logs Event"}}'
+alert_text_type: alert_text_only
+alert_text_args:
+- '@uuid'
+- '@timestamp'
+- collection
+- type
+- beat.name
+- computer_name
+- log_name
+
+alert: rabbitmq
+rabbitmq_host: 10.0.0.1
+rabbitmq_port: 5672
+rabbitmq_user: guest
+rabbitmq_pass: guest
+rabbitmq_vhost: cyphon
+rabbitmq_exchange: cyphon
+rabbitmq_key: watchdogs
