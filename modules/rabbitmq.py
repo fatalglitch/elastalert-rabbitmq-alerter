@@ -1,4 +1,5 @@
 from elastalert.alerts import Alerter
+from elastalert.util import elastalert_logger
 import pika
 
 class RabbitMQAlerter(Alerter):
