@@ -20,6 +20,7 @@ class RabbitMQAlerter(Alerter):
 
     def alert(self, matches):
         body = self.create_alert_body(matches)
+        alert_body = body.replace('\\', '\\\\')
 
         """ Setup connection to RabbitMQ """
 
@@ -27,7 +28,7 @@ class RabbitMQAlerter(Alerter):
         connection = pika.BlockingConnection(pika.ConnectionParameters(self.rabbitmq_host, self.rabbitmq_port,
                                                                        self.rabbitmq_vhost, credentials))
         channel = connection.channel()
-        channel.basic_publish(exchange=self.rabbitmq_exchange, routing_key=self.rabbitmq_key, body=body)
+        channel.basic_publish(exchange=self.rabbitmq_exchange, routing_key=self.rabbitmq_key, body=alert_body)
         connection.close()
         elastalert_logger.info("Alert sent to RabbitMQ")
 
